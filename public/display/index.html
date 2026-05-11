@@ -9,8 +9,8 @@
     html, body {
       width: 100%; height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      color: #eaeaea;
+      background: #0a0a0a;
+      color: #f0f0f0;
       overflow: hidden;
     }
     body {
@@ -26,17 +26,17 @@
     .lobby-title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; margin-bottom: 8px; }
     .lobby-sub   { color: #888; font-size: clamp(1rem, 2.5vw, 1.4rem); margin-bottom: 36px; }
     .join-card {
-      background: #0f3460;
+      background: #181818;
       border-radius: 16px;
       padding: 24px 48px;
       text-align: center;
       margin-bottom: 28px;
     }
     .join-label { color: #888; font-size: 0.95rem; margin-bottom: 6px; }
-    .join-url   { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 800; color: #e94560; }
+    .join-url   { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 800; color: #e91e8c; }
     .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .chip {
-      background: #0f3460;
+      background: #181818;
       border-radius: 20px;
       padding: 8px 18px;
       font-size: clamp(0.85rem, 1.8vw, 1rem);
@@ -84,11 +84,11 @@
     }
     .opt .lbl { font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 900; flex-shrink: 0; width: 1.8em; }
     .opt .count { margin-left: auto; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 3px 12px; font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 700; flex-shrink: 0; }
-    .opt.A { background: #2471a3; }
-    .opt.B { background: #922b21; }
-    .opt.C { background: #935116; }
-    .opt.D { background: #1e8449; }
-    .opt.correct { box-shadow: 0 0 0 4px #2ecc71, 0 0 40px #2ecc7188; transform: scale(1.03); }
+    .opt.A { background: #c2185b; }
+    .opt.B { background: #7b003d; }
+    .opt.C { background: #a30055; }
+    .opt.D { background: #f50086; }
+    .opt.correct { box-shadow: 0 0 0 4px #ffffff, 0 0 40px #ffffff55; transform: scale(1.03); }
     .opt.wrong   { opacity: 0.2; }
 
     /* ── Reveal / Game Over ── */
@@ -98,16 +98,16 @@
       display: flex;
       align-items: center;
       padding: 14px 20px;
-      background: #0f3460;
+      background: #181818;
       border-radius: 10px;
       margin-bottom: 8px;
       font-size: clamp(0.95rem, 2vw, 1.1rem);
       gap: 12px;
     }
-    .lb-row:first-child { background: #4a235a; }
+    .lb-row:first-child { background: #6a0040; }
     .lb-rank { width: 2.2em; flex-shrink: 0; }
     .lb-name { flex: 1; }
-    .lb-pts  { font-weight: 700; color: #f39c12; }
+    .lb-pts  { font-weight: 700; color: #e91e8c; }
 
     .gameover-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 6px; }
     .gameover-sub   { color: #888; font-size: 1.1rem; margin-bottom: 28px; }
