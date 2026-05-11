@@ -58,6 +58,7 @@ function triggerReveal() {
     }
   }
 
+  emitPlayersUpdate();
   io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(true) });
   io.to('display').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(false) });
 
