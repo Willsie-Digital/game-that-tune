@@ -39,6 +39,10 @@ Single-file Node/Express/Socket.io server (`server.js`) serving three static HTM
 ```
 Questions are loaded once at startup with `fs.readFileSync`. Restart the server after editing `questions.json`.
 
+## Audio files
+
+Drop mp3 or m4a files into `public/audio/`. Reference them in `questions.json` as `"audioUrl": "/audio/filename.mp3"`. The display screen creates an `<audio>` element and attempts autoplay when the question is shown.
+
 ## Heroku deployment
 
 ```bash

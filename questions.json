@@ -1,37 +1,37 @@
 [
   {
-    "question": "Which artist released 'Bohemian Rhapsody'?",
-    "options": ["The Beatles", "Queen", "Led Zeppelin", "Pink Floyd"],
+    "question": "What Song is This?",
+    "options": ["Main Theme - Donkey Kong", "1-2 Super Mario Bros", "Overworld - Super Mario Bros 3", "Title Screen - Donkey Kong Jr."],
     "correctIndex": 1,
-    "audioUrl": null,
+    "audioUrl": "/audio/01 - Super Mario Bros Underground Theme.mp3",
     "videoUrl": null
   },
   {
-    "question": "What year did Michael Jackson release 'Thriller'?",
-    "options": ["1979", "1981", "1982", "1985"],
+    "question": "Your Pokemon are fighting fit! We hope to see you again. Which Gen are we hearing?",
+    "options": ["Gen IV", "Gen V", "Gen VI", "Gen VII"],
     "correctIndex": 2,
-    "audioUrl": null,
+    "audioUrl": "/audio/02 - Pokemon XY Pokemon Center.mp3",
     "videoUrl": null
   },
   {
-    "question": "Which band performed 'Smells Like Teen Spirit'?",
-    "options": ["Pearl Jam", "Soundgarden", "Alice in Chains", "Nirvana"],
+    "question": "Which Zone are we in?",
+    "options": ["Star Light Zone", "Labyrinth Zone", "Metropolis Zone", "Marble Garden Zone"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/03 - Sonic The Hedgehog OST - Starlight Zone.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Dames, detectives, and darkness. Which noir-themed game is this song from?",
+    "options": ["L.A. Noire", "Mouse: P.I. For Hire", "The Wolf Among Us", "Max Payne"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/04 - MOUSE PI For Hire A Case Like No Other.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "What time of day is it? (Animal Crossing music)",
+    "options": ["2:00pm", "3:00pm", "4:00pm", "5:00pm"],
     "correctIndex": 3,
-    "audioUrl": null,
-    "videoUrl": null
-  },
-  {
-    "question": "Who is known as the 'Queen of Pop'?",
-    "options": ["Beyoncé", "Rihanna", "Madonna", "Lady Gaga"],
-    "correctIndex": 2,
-    "audioUrl": null,
-    "videoUrl": null
-  },
-  {
-    "question": "Which song begins with 'Is this the real life? Is this just fantasy?'",
-    "options": ["Stairway to Heaven", "Hotel California", "Bohemian Rhapsody", "November Rain"],
-    "correctIndex": 2,
-    "audioUrl": null,
+    "audioUrl": "/audio/05 - 5 PM - Animal Crossing New Horizons Music.mp3",
     "videoUrl": null
   }
 ]

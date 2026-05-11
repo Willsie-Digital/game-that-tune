@@ -11,6 +11,8 @@ const io = new Server(server);
 const PORT = process.env.PORT || 3737;
 const questions = JSON.parse(fs.readFileSync(path.join(__dirname, 'questions.json'), 'utf8'));
 
+app.use('/audio', express.static(path.join(__dirname, 'public/audio')));
+
 app.get('/', (req, res) => res.redirect('/display'));
 app.get('/player', (req, res) => res.sendFile(path.join(__dirname, 'public/player/index.html')));
 app.get('/host', (req, res) => res.sendFile(path.join(__dirname, 'public/host/index.html')));
@@ -186,6 +188,11 @@ io.on('connection', (socket) => {
   socket.on('reveal-answer', () => {
     if (socket.data.role !== 'host') return;
     triggerReveal();
+  });
+
+  socket.on('audio-control', ({ action }) => {
+    if (socket.data.role !== 'host') return;
+    io.to('display').emit('audio-control', { action });
   });
 
   socket.on('set-player-hidden', ({ socketId, hidden }) => {

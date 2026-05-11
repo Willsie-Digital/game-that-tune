@@ -52,9 +52,17 @@
       margin-bottom: 28px;
       max-width: 900px;
     }
-    .media-wrap { width: 100%; max-width: 700px; margin-bottom: 24px; }
-    .media-wrap audio,
+    .media-wrap { width: 100%; max-width: 700px; margin-bottom: 24px; text-align: center; }
     .media-wrap video { width: 100%; border-radius: 12px; }
+    .now-playing {
+      font-size: 3.5rem;
+      animation: pulse 1.4s ease-in-out infinite;
+      display: inline-block;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.82); }
+    }
 
     .opts-grid {
       display: grid;
@@ -145,6 +153,11 @@
     const socket = io();
     const LABELS = ['A', 'B', 'C', 'D'];
     let currentQuestion = null;
+    let currentAudio = null;
+
+    function stopAudio() {
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    }
 
     document.getElementById('join-url').textContent = window.location.host + '/player';
 
@@ -171,6 +184,7 @@
     });
 
     socket.on('game-started', () => {
+      stopAudio();
       currentQuestion = null;
       showScreen('lobby-screen');
     });
@@ -182,12 +196,11 @@
 
       const mediaWrap = document.getElementById('media-wrap');
       mediaWrap.innerHTML = '';
+      stopAudio();
       if (data.audioUrl) {
-        const el = document.createElement('audio');
-        el.src = data.audioUrl;
-        el.controls = true;
-        el.autoplay = true;
-        mediaWrap.appendChild(el);
+        currentAudio = new Audio(data.audioUrl);
+        currentAudio.play().catch(() => {});
+        mediaWrap.innerHTML = '<span class="now-playing">🎵</span>';
       } else if (data.videoUrl) {
         const el = document.createElement('video');
         el.src = data.videoUrl;
@@ -203,7 +216,15 @@
       showScreen('question-screen');
     });
 
+    socket.on('audio-control', ({ action }) => {
+      if (!currentAudio) return;
+      if (action === 'play')   currentAudio.play().catch(() => {});
+      if (action === 'pause')  currentAudio.pause();
+      if (action === 'replay') { currentAudio.currentTime = 0; currentAudio.play().catch(() => {}); }
+    });
+
     socket.on('reveal', (data) => {
+      stopAudio();
       if (currentQuestion) {
         document.getElementById('reveal-q-text').textContent = currentQuestion.question;
         document.getElementById('reveal-opts').innerHTML = currentQuestion.options.map((opt, i) => `

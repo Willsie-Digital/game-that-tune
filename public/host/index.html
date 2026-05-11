@@ -110,7 +110,23 @@
     .opt.D { background: #1e8449; }
     .opt.correct { outline: 2px solid #2ecc71; }
 
-    .media-hint { color: #888; font-size: 0.8rem; word-break: break-all; }
+    .media-hint { color: #888; font-size: 0.8rem; word-break: break-all; margin-bottom: 10px; }
+    .audio-controls { display: none; gap: 8px; margin-top: 4px; }
+    .audio-controls.active { display: flex; }
+    .btn-audio {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.15s;
+    }
+    .btn-audio:hover { opacity: 0.85; }
+    .btn-playpause { background: #6c3483; }
+    .btn-replay    { background: #2c3e50; }
 
     .player-list { list-style: none; }
     .player-item {
@@ -183,6 +199,10 @@
       <div class="q-text" id="q-text">No question yet</div>
       <div class="opts" id="opts"></div>
       <div class="media-hint" id="media-hint"></div>
+      <div class="audio-controls" id="audio-controls">
+        <button class="btn-audio btn-playpause" id="playpause-btn">⏸ Pause</button>
+        <button class="btn-audio btn-replay"    id="replay-btn">↺ Replay</button>
+      </div>
     </div>
 
     <div class="card full">
@@ -196,9 +216,29 @@
     const socket = io();
     const LABELS = ['A', 'B', 'C', 'D'];
 
-    const startBtn  = document.getElementById('start-btn');
-    const nextBtn   = document.getElementById('next-btn');
-    const revealBtn = document.getElementById('reveal-btn');
+    const startBtn      = document.getElementById('start-btn');
+    const nextBtn       = document.getElementById('next-btn');
+    const revealBtn     = document.getElementById('reveal-btn');
+    const audioControls = document.getElementById('audio-controls');
+    const playpauseBtn  = document.getElementById('playpause-btn');
+    const replayBtn     = document.getElementById('replay-btn');
+
+    let isPlaying = false;
+
+    function setAudioPlaying(playing) {
+      isPlaying = playing;
+      playpauseBtn.textContent = playing ? '⏸ Pause' : '▶ Play';
+    }
+
+    playpauseBtn.addEventListener('click', () => {
+      socket.emit('audio-control', { action: isPlaying ? 'pause' : 'play' });
+      setAudioPlaying(!isPlaying);
+    });
+
+    replayBtn.addEventListener('click', () => {
+      socket.emit('audio-control', { action: 'replay' });
+      setAudioPlaying(true);
+    });
 
     socket.emit('register', { role: 'host' });
 
@@ -223,6 +263,7 @@
       document.getElementById('q-counter').textContent = '';
       document.getElementById('opts').innerHTML = '';
       document.getElementById('media-hint').textContent = '';
+      audioControls.classList.remove('active');
     });
 
     socket.on('players-update', (players) => {
@@ -253,6 +294,12 @@
       `).join('');
       const hints = [data.audioUrl && `🔊 ${data.audioUrl}`, data.videoUrl && `🎬 ${data.videoUrl}`].filter(Boolean);
       document.getElementById('media-hint').textContent = hints.join('  ');
+      if (data.audioUrl) {
+        audioControls.classList.add('active');
+        setAudioPlaying(true);
+      } else {
+        audioControls.classList.remove('active');
+      }
     });
 
     socket.on('answer-count', ({ answered, total }) => {
@@ -260,7 +307,7 @@
       document.getElementById('progress-sub').textContent = answered === total && total > 0 ? 'All answered!' : 'answered';
     });
 
-    socket.on('reveal', () => setPhase('reveal'));
+    socket.on('reveal', () => { setPhase('reveal'); audioControls.classList.remove('active'); });
     socket.on('game-over', () => setPhase('gameover'));
   </script>
 </body>
