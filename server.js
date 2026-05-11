@@ -58,9 +58,12 @@ function triggerReveal() {
     }
   }
 
+  const tally = Array(q.options.length).fill(0);
+  for (const answerIndex of answers.values()) tally[answerIndex]++;
+
   emitPlayersUpdate();
-  io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(true) });
-  io.to('display').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(false) });
+  io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(true), tally });
+  io.to('display').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(false), tally });
 
   for (const [socketId, player] of players) {
     const answerIndex = answers.get(socketId);

@@ -83,6 +83,7 @@
       transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s;
     }
     .opt .lbl { font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 900; flex-shrink: 0; width: 1.8em; }
+    .opt .count { margin-left: auto; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 3px 12px; font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 700; flex-shrink: 0; }
     .opt.A { background: #2471a3; }
     .opt.B { background: #922b21; }
     .opt.C { background: #935116; }
@@ -230,6 +231,7 @@
         document.getElementById('reveal-opts').innerHTML = currentQuestion.options.map((opt, i) => `
           <div class="opt ${LABELS[i]} ${i === data.correctIndex ? 'correct' : 'wrong'}">
             <span class="lbl">${LABELS[i]}</span>${opt}
+            <span class="count">${data.tally ? data.tally[i] : ''}</span>
           </div>
         `).join('');
       }
