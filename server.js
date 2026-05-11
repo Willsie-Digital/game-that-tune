@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3737;
 const questions = JSON.parse(fs.readFileSync(path.join(__dirname, 'questions.json'), 'utf8'));
 
 app.get('/', (req, res) => res.redirect('/display'));
@@ -16,18 +16,28 @@ app.get('/player', (req, res) => res.sendFile(path.join(__dirname, 'public/playe
 app.get('/host', (req, res) => res.sendFile(path.join(__dirname, 'public/host/index.html')));
 app.get('/display', (req, res) => res.sendFile(path.join(__dirname, 'public/display/index.html')));
 
-// socketId -> { name, score, answered }
+// socketId -> { name, score, answered, hidden, joinNumber }
 const players = new Map();
 // socketId -> answerIndex
 const answers = new Map();
 
 let phase = 'lobby'; // lobby | question | reveal | gameover
 let questionIndex = -1;
+let joinCounter = 0;
 
-function playerList() {
-  return [...players.values()]
-    .sort((a, b) => b.score - a.score)
-    .map(({ name, score }) => ({ name, score }));
+// forHost=true: includes socketId + hidden flag; never send to players/display
+function playerList(forHost = false) {
+  return [...players.entries()]
+    .sort(([, a], [, b]) => b.score - a.score)
+    .map(([socketId, { name, score, hidden, joinNumber }]) => {
+      if (forHost) return { socketId, name, score, hidden, joinNumber };
+      return { name: hidden ? `Player ${joinNumber}` : name, score };
+    });
+}
+
+function emitPlayersUpdate() {
+  io.to('host').emit('players-update', playerList(true));
+  io.to('display').emit('players-update', playerList(false));
 }
 
 function answerCount() {
@@ -46,15 +56,14 @@ function triggerReveal() {
     }
   }
 
-  const leaderboard = playerList();
-  io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard });
-  io.to('display').emit('reveal', { correctIndex: q.correctIndex, leaderboard });
+  io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(true) });
+  io.to('display').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(false) });
 
   for (const [socketId, player] of players) {
     const answerIndex = answers.get(socketId);
     io.to(socketId).emit('reveal', {
       correctIndex: q.correctIndex,
-      leaderboard,
+      leaderboard: playerList(false),
       yourAnswer: answerIndex ?? null,
       correct: answerIndex !== undefined ? answerIndex === q.correctIndex : null,
       score: player.score,
@@ -75,7 +84,7 @@ io.on('connection', (socket) => {
         return;
       }
 
-      players.set(socket.id, { name: trimmed, score: 0, answered: false });
+      players.set(socket.id, { name: trimmed, score: 0, answered: false, hidden: false, joinNumber: ++joinCounter });
       socket.emit('registered');
 
       // Sync late-joining player to current question
@@ -91,10 +100,10 @@ io.on('connection', (socket) => {
         });
       }
 
-      io.emit('players-update', playerList());
+      emitPlayersUpdate();
     } else {
       socket.emit('registered');
-      socket.emit('players-update', playerList());
+      socket.emit('players-update', playerList(role === 'host'));
 
       // Sync host/display to in-progress game
       if (phase !== 'lobby' && phase !== 'gameover') {
@@ -110,7 +119,7 @@ io.on('connection', (socket) => {
         socket.emit('question', role === 'host' ? { ...base, correctIndex: q.correctIndex } : base);
         if (role === 'host') socket.emit('answer-count', answerCount());
         if (phase === 'reveal') {
-          socket.emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList() });
+          socket.emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(role === 'host') });
         }
       }
     }
@@ -124,7 +133,7 @@ io.on('connection', (socket) => {
     questionIndex = -1;
     phase = 'lobby';
     io.emit('game-started');
-    io.emit('players-update', playerList());
+    emitPlayersUpdate();
   });
 
   socket.on('show-question', () => {
@@ -134,7 +143,9 @@ io.on('connection', (socket) => {
     questionIndex++;
     if (questionIndex >= questions.length) {
       phase = 'gameover';
-      io.emit('game-over', { leaderboard: playerList() });
+      io.to('host').emit('game-over', { leaderboard: playerList(true) });
+      io.to('display').emit('game-over', { leaderboard: playerList(false) });
+      io.to('player').emit('game-over', { leaderboard: playerList(false) });
       return;
     }
 
@@ -177,11 +188,19 @@ io.on('connection', (socket) => {
     triggerReveal();
   });
 
+  socket.on('set-player-hidden', ({ socketId, hidden }) => {
+    if (socket.data.role !== 'host') return;
+    const player = players.get(socketId);
+    if (!player) return;
+    player.hidden = hidden;
+    emitPlayersUpdate();
+  });
+
   socket.on('disconnect', () => {
     if (socket.data.role === 'player') {
       players.delete(socket.id);
       answers.delete(socket.id);
-      io.emit('players-update', playerList());
+      emitPlayersUpdate();
       if (phase === 'question') {
         io.to('host').emit('answer-count', answerCount());
         if (players.size > 0 && answers.size === players.size) triggerReveal();

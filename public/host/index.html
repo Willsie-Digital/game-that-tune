@@ -124,6 +124,33 @@
       font-size: 0.9rem;
     }
     .player-pts { font-weight: 700; color: #f39c12; }
+    .player-name { flex: 1; }
+    .player-item.is-hidden .player-name { opacity: 0.4; text-decoration: line-through; }
+    .hidden-tag {
+      display: inline-block;
+      background: #444;
+      color: #999;
+      font-size: 0.62rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .hide-btn {
+      padding: 3px 9px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #2c2c4a;
+      color: #aaa;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .hide-btn:hover { background: #3a3a5c; color: #eee; }
 
     @media (max-width: 580px) {
       .grid { grid-template-columns: 1fr; }
@@ -201,11 +228,18 @@
     socket.on('players-update', (players) => {
       document.getElementById('player-count').textContent = players.length;
       document.getElementById('player-list').innerHTML = players.map((p, i) => `
-        <li class="player-item">
-          <span>${i + 1}. ${p.name}</span>
+        <li class="player-item${p.hidden ? ' is-hidden' : ''}">
+          <span class="player-name">${i + 1}. ${p.name}${p.hidden ? '<span class="hidden-tag">hidden</span>' : ''}</span>
           <span class="player-pts">${p.score} pts</span>
+          <button class="hide-btn" data-id="${p.socketId}" data-hidden="${p.hidden}">${p.hidden ? 'Show' : 'Hide'}</button>
         </li>
       `).join('');
+    });
+
+    document.getElementById('player-list').addEventListener('click', (e) => {
+      const btn = e.target.closest('.hide-btn');
+      if (!btn) return;
+      socket.emit('set-player-hidden', { socketId: btn.dataset.id, hidden: btn.dataset.hidden !== 'true' });
     });
 
     socket.on('question', (data) => {
