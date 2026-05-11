@@ -33,5 +33,320 @@
     "correctIndex": 3,
     "audioUrl": "/audio/05 - 5 PM - Animal Crossing New Horizons Music.mp3",
     "videoUrl": null
+  },
+  {
+    "question": "What Disney game is this song from?",
+    "options": ["Mickey's Speedway USA", "Donald Duck: Goin' Quackers", "Magical Tetris Challenge", "Tigger's Honey Hunt"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/06 - Mickeys Speedway USA OST Colorado.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "We really tried to cater our questions to our audience’s interests this year. Which retro sports game is this song from?",
+    "options": ["NHL '97", "NBA '97", "Madden '97", "FIFA '97"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/07 - Madden _97 Title Screen.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Let’s go on a wild cab ride with this band!",
+    "options": ["Green Day", "Blink 182", "The Offspring", "NOFX"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/08 - Way Down The Line.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Is everyday life too boring? Simulate it instead! Which 'Sim' game is this song from?",
+    "options": ["SimCity 3000", "SimTower", "The Sims", "The Sims2"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/09 - The Sims, BoSIM Nova.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Brrr…which ice cold music is this?",
+    "options": ["Ice Valley - Metroid Prime", "Ice Cavern - The Legend of Zelda, Ocarina of Time", "Over Shiver Mountain - Paper Mario", "Freezeezy Peak - Banjo Kazoie"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/10 - Paper Mario 64 OST - Over Shiver Mountain.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Grunge was big in the 90s, and so were these Sega games. Which game is this song from?",
+    "options": ["Road Rash", "Comix Zone", "Skitchin'", "Vectorman"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/11 - Comix Zone, 1-1.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Indie devs are one thing, but how well do you know your composers? What’s the name of the person who wrote this song?",
+    "options": ["Christopher Larkin", "Jake Kaufman", "Lena Raine", "Toby Fox"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/12 - Silksong OST - Lace.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Spooky. Which game is this song from?",
+    "options": ["Ghouls and Ghosts", "Haunted Castle", "Zombies Ate My Neighbours!", "Splatterhouse"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/13 - Ghouls and Ghosts, The Haunted Graveyard.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Where in the world (of Zelda) would you hear this song?",
+    "options": ["Hyrule", "Lorule", "Skyloft", "Termina"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/14 - The Legend of Zelda Majora_s Mask Soundtrack Deku Palace.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "This should be a simple task for you, 007. Which GoldenEye level is this song from?",
+    "options": ["Dam", "Facility", "Archives", "Bunker"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/15 - GoldenEye 007, Facility.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which game is this song from?",
+    "options": ["Sonic Adventure 2: Battle", "Rhythm Heaven Fever", "Tony Hawk's Pro Skater 2", "Devil May Cry"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/16 - Karate Man (Lonely Storm) - Rhythm Heaven Fever (ENG Version).mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Yup, it’s Bloody Tears from Castlevania. But which game is this rendition from?",
+    "options": ["Castlevania: Rondo of Blood", "Super Castlevania IV", "Castlevania: Bloodlines", "Castlevania: Pachislot"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/17 - Castlevania Rondo of Blood, Bloody Tears.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Where in Mario Kart World would you hear this song?",
+    "options": ["Moo Moo Meadows", "Boo Cinema", "Wario Shipyard", "Toad's Factory"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/18 - Wii Toad_s Factory (Mario Kart Wii) - Mario Kart World (OST).m4a",
+    "videoUrl": null
+  },
+  {
+    "question": "Obligatory water level music. Which game is this song from?",
+    "options": ["Donkey Kong Country", "Super Metroid", "Earthworm Jim", "Ecco the Doplphin"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/19 - Super Metroid, Maridia.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which game is this song from? Here’s a hint. It’s a game that’s available to play in the Open Arcade just over there!",
+    "options": ["Kirdby Return to Dreamland Deluxe", "Puzzle Bobble Everybubble", "Crypt of the NecroDancer", "Platypus Reclayed"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/20 - Platypus 1 OST - Wizball.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which 2026 game is this song from?",
+    "options": ["Saros", "Resident Evil Requim", "Pragmata", "Marathon"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/21 - Marathon, We_re All Monsters.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Hurry up, the planet is about to explode! …but which planet are we on?",
+    "options": ["Zebes", "SR388", "Tallon IV", "ZDR"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/22 - Metroid Prime Music - Frigate Orpheon Escape.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Rip and tear. Until it is done. Which DOOM game is this song from?",
+    "options": ["DOOM 3", "DOOM 2016", "DOOM: Eternal", "DOOM: The Dark Ages"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/23 - DOOM The Dark Ages, Unchained Predator.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Life is like a hurricane here in Duckberg… but where exactly have we traveled to?",
+    "options": ["The Amazon", "Transylvania", "The Himalayas", "The Moon"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/24 - DuckTales Music (NES) - The Amazon Theme.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Ahh, the perfect soundtrack for crime. Which GTA V radio station is this song from?",
+    "options": ["FlyLo FM", "Non-Stop-Pop FM", "Space 103.2", "Soulwax FM"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/25 - GTA V, Lady Hear Me Tonight (Non-Stop-Pop FM).mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which game is this song from?",
+    "options": ["Scott Pilgrim EX", "Bloodstained: Ritual of the Night", "Little Nemo and the Guardians of Slumberland", "Lil Gator Game"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/26 - Little Nemo and the Guardians of Slumberland Steam Trailer.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Yup. No hint required.",
+    "options": ["Super Mario Bros.", "The Legend of Zelda", "Metroid", "Kid Icarus"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/27 - The Legend of Zelda, Overworld.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Who is excited to play this game when it comes out?",
+    "options": ["Mina the Hollower", "Yoshi and the Mysterious Book", "Bubsy 4D", "007 First Light"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/28 - Mina the Hollower - Blighted Docks.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "The year is 2000. You’ve got your Oakleys on, you’re surfing Napster on 56k, and everything is silver. Which racing game is this song from?",
+    "options": ["Initial D: Mountain Vengeance", "Tokyo Xtreme Racer", "Midnight Club", "R4: Ridge Racer"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/29 - R4 Ridge Racer, SILHOUETTE DANCE.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which Splatoon Idols perform this song?",
+    "options": ["The Squid Sisters", "Off the Hook", "Deep Cut", "Yoko & the Gold Bazookasr"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/30 - Calamari Inkantation (Squid Sisters) - Splatoon OST.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which Mega Man Robot Master's theme is this?",
+    "options": ["Metal Man", "Air Man", "Man Man", "Bubble Man"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/31 - Mega Man 2, Bubble Man.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which game is this song from?",
+    "options": ["Pokémon Pokopia", "Suika Game", "Yoshi and the Mysterious Book", "Hello Kitty: Island Adventure"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/32 - Title Screen Theme - Pokemon Pokopia.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Alfred might not have played these games because…reasons. Which “friendslop” game is this song from?",
+    "options": ["RV There Yet?", "Lethal Company", "Among Us", "Content Warning"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/33 - RV There Yet, Cassette Angel of Steel.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "You just duked it out in City Trial in Kirby Air Riders. What stadium is this?",
+    "options": ["Drag Race", "Air Glider", "Kirby Melee", "Gourmet Race"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/34 - Stadium Drag Race - City Trial - Kirby Air Riders.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Living in the city, you know you have to survive 🎵 That’s it, that’s the hint.",
+    "options": ["Sonic and Knuckles", "Sonic Adventure", "Sonic CD", "Sonic R"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/35 - Sonic R, Living In The City.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "We have some rhythm arcade games this year. Which game is this song from?",
+    "options": ["Taiko no Tasujin", "WACCA", "Chunithm", "Bishi Bashi Tower"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/36 - Dive with U.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Wheeeeeeeee! Which futuristic racing game is this song from?",
+    "options": ["F-Zero GX", "Wipeout HD", "Fast Fusion", "San Francisco Rush 2049"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/37 - Fast Fusion, Menu.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "What Indie game is this song from?",
+    "options": ["Peak", "Hades 2", "Ball x Pit", "Dispatch"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/38 - Hades II - Death to Chronos.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "We’re at Otafest, but that doesn’t mean we don’t like Western RPGs. Which game is this song from?",
+    "options": ["Baldur's Gate 3", "Clair Obscur: Expedition 33", "Kingdom Come: Deliverance 2", "Vampire: The Masquerade: Bloodlines 2"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/39 - Clair Obscur Expedition 33 - Spring Meadows, Battling Breeze.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "This year has seen many older games released on new platforms. Where is this song from?",
+    "options": ["Mega Man Star Force Legacy Collection", "Tales of Berseria Remastered", "Dragon Quest 7 Reimagined", "Rugrats: Retro Rewind Collection"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/40 - Mega Man Star Force 3 OST - T29 The Cosmowave.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Not Game that Tune, but Name that Tune. Which 8-bit song cover is this?",
+    "options": ["Wonderwall", "Despacito", "All My Loving", "Buddy Holly"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/41 - Buddy Holly in 8-Bit.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "This composer has included this tune in almost every game they have composed for!",
+    "options": ["Nobuo Uematsu", "Koji Kondo", "Kazumi Totaka", "Junichi Masuda"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/42 - Totaka_s Song (Original).mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Quarter-circle forward + punch. Which Street Fighter character theme is this?",
+    "options": ["Ken", "Ryu", "Akuma", "Dan"],
+    "correctIndex": 0,
+    "audioUrl": "/audio/43 - Street Fighter 2 Turbo, Ken_s Theme.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Let me just adjust my internet settings real quick on this console.",
+    "options": ["Nintendo DS", "Nintendo Wii", "Nintendo 3DS", "Nintendo Wii U"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/44 - Nintendo 3DS Internet Settings Theme (High Quality, 2022 Remastered).mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "The Fantasy isn’t so Final. Which Final Fantasy is this song from?",
+    "options": ["FFXI", "FFXIV", "FFXV", "FFXVI"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/45 - Final Fantasy XVI, Find the Flame.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "For those of you who still remember cable TV: This song featured in an advertising campaign for which Xbox 360 game?",
+    "options": ["Halo 3", "Gears of War", "Lost Odyssey", "Dead Island"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/46 - Gears of War 2006 Advertisement, Mad World.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Which SEGA Genesis game is this song from?",
+    "options": ["Vectorman", "Gunstar Heroes", "Thunder Force IV", "Rocket Night Adventures"],
+    "correctIndex": 1,
+    "audioUrl": "/audio/47 - Gunstar Heroes, Dice Palace.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Unexpectedly extra music for mundane tasks. Which game is this song from?",
+    "options": ["Pictionary", "Euro Truck Simulator", "SEGA Bass Fishing", "Wheel of Fortune"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/48 - SEGA Bass Fishing, Huge Fish.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "They look retro, but aren’t. Which indie game is this song from?",
+    "options": ["Shovel Knight", "Undertale", "Celeste", "Cave Story"],
+    "correctIndex": 3,
+    "audioUrl": "/audio/49 - Cave Story, Moonsong.mp3",
+    "videoUrl": null
+  },
+  {
+    "question": "Who sings this song?",
+    "options": ["Paulette", "Paulie", "Pauline", "Pollyanna"],
+    "correctIndex": 2,
+    "audioUrl": "/audio/50 - DONKEY KONG BANANZA - Heart of Gold  Paulines Song (Music Video Lyrics).mp3",
+    "videoUrl": null
   }
 ]
