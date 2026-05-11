@@ -259,7 +259,10 @@
       nextBtn.textContent = p === 'lobby' ? 'Show First Question' : 'Next Question';
     }
 
-    startBtn.addEventListener('click',  () => socket.emit('start-game'));
+    startBtn.addEventListener('click', () => {
+      if (!confirm('Reset the game and return all players to the lobby? This cannot be undone.')) return;
+      socket.emit('start-game');
+    });
     nextBtn.addEventListener('click',   () => socket.emit('show-question'));
     revealBtn.addEventListener('click', () => socket.emit('reveal-answer'));
 
