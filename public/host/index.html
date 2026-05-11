@@ -168,6 +168,14 @@
     }
     .hide-btn:hover { background: #3a3a5c; color: #eee; }
 
+    footer {
+      margin-top: 24px;
+      padding: 12px 0;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #555;
+      max-width: 960px;
+    }
     @media (max-width: 580px) {
       .grid { grid-template-columns: 1fr; }
       .full { grid-column: 1; }
@@ -310,5 +318,9 @@
     socket.on('reveal', () => { setPhase('reveal'); audioControls.classList.remove('active'); });
     socket.on('game-over', () => setPhase('gameover'));
   </script>
+  <footer>
+    <!-- ENDLESS ERA GAMING LOGO -->
+    <span>Developed by Endless ERA Gaming</span>
+  </footer>
 </body>
 </html>
