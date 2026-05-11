@@ -168,7 +168,7 @@
 
     function renderLeaderboard(list, containerId) {
       const medals = ['🥇', '🥈', '🥉'];
-      document.getElementById(containerId).innerHTML = list.map((p, i) => `
+      document.getElementById(containerId).innerHTML = list.slice(0, 5).map((p, i) => `
         <div class="lb-row">
           <span class="lb-rank">${medals[i] ?? `${i + 1}.`}</span>
           <span class="lb-name">${p.name}</span>
