@@ -1,0 +1,37 @@
+[
+  {
+    "question": "Which artist released 'Bohemian Rhapsody'?",
+    "options": ["The Beatles", "Queen", "Led Zeppelin", "Pink Floyd"],
+    "correctIndex": 1,
+    "audioUrl": null,
+    "videoUrl": null
+  },
+  {
+    "question": "What year did Michael Jackson release 'Thriller'?",
+    "options": ["1979", "1981", "1982", "1985"],
+    "correctIndex": 2,
+    "audioUrl": null,
+    "videoUrl": null
+  },
+  {
+    "question": "Which band performed 'Smells Like Teen Spirit'?",
+    "options": ["Pearl Jam", "Soundgarden", "Alice in Chains", "Nirvana"],
+    "correctIndex": 3,
+    "audioUrl": null,
+    "videoUrl": null
+  },
+  {
+    "question": "Who is known as the 'Queen of Pop'?",
+    "options": ["Beyoncé", "Rihanna", "Madonna", "Lady Gaga"],
+    "correctIndex": 2,
+    "audioUrl": null,
+    "videoUrl": null
+  },
+  {
+    "question": "Which song begins with 'Is this the real life? Is this just fantasy?'",
+    "options": ["Stairway to Heaven", "Hotel California", "Bohemian Rhapsody", "November Rain"],
+    "correctIndex": 2,
+    "audioUrl": null,
+    "videoUrl": null
+  }
+]

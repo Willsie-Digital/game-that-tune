@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Game That Tune</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #eaeaea;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 6px; text-align: center; }
+    .sub { color: #888; font-size: 0.9rem; margin-bottom: 28px; text-align: center; }
+
+    .screen { width: 100%; max-width: 420px; display: none; flex-direction: column; align-items: center; }
+    .screen.active { display: flex; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #333;
+      border-radius: 12px;
+      background: #0f3460;
+      color: #eaeaea;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    input[type="text"]:focus { border-color: #e94560; }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-primary { background: #e94560; color: white; }
+
+    .status { text-align: center; padding: 20px 0; }
+    .status-icon { font-size: 3rem; margin-bottom: 12px; }
+    .status-text { font-size: 1.2rem; margin-bottom: 6px; }
+    .status-sub { color: #888; font-size: 0.9rem; }
+
+    .q-counter { color: #888; font-size: 0.85rem; margin-bottom: 10px; align-self: flex-start; }
+    .q-text {
+      width: 100%;
+      font-size: 1.15rem;
+      line-height: 1.45;
+      text-align: center;
+      padding: 16px;
+      background: #0f3460;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .options { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .opt-btn {
+      padding: 16px 10px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: transform 0.1s, opacity 0.2s;
+      color: white;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .opt-btn:active { transform: scale(0.95); }
+    .opt-btn:disabled { cursor: not-allowed; }
+    .opt-btn .lbl { font-size: 0.75rem; opacity: 0.8; font-weight: 700; }
+    .opt-btn.A { background: #2980b9; }
+    .opt-btn.B { background: #c0392b; }
+    .opt-btn.C { background: #d35400; }
+    .opt-btn.D { background: #27ae60; }
+    .opt-btn.selected { box-shadow: 0 0 0 3px white; }
+    .opt-btn.correct { box-shadow: 0 0 0 3px #2ecc71; }
+    .opt-btn.wrong { opacity: 0.3; }
+
+    .result-banner {
+      width: 100%;
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .result-banner.correct { background: #27ae60; }
+    .result-banner.wrong { background: #c0392b; }
+    .result-banner.skipped { background: #555; }
+
+    .score-wrap { text-align: center; margin-top: 20px; }
+    .score-label { color: #888; font-size: 0.9rem; }
+    .score-val { font-size: 2.4rem; font-weight: 700; margin-top: 4px; }
+
+    .lb-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #0f3460;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+    .lb-row .pts { font-weight: 700; }
+
+    .error { color: #e74c3c; font-size: 0.85rem; margin-top: 8px; text-align: center; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+
+  <div id="join-screen" class="screen active">
+    <h1>🎵 Game That Tune</h1>
+    <p class="sub">Enter your name to join</p>
+    <input type="text" id="name-input" placeholder="Your name" maxlength="20" autocomplete="off" autocorrect="off">
+    <button class="btn btn-primary" id="join-btn">Join Game</button>
+    <p class="error" id="error-msg"></p>
+  </div>
+
+  <div id="lobby-screen" class="screen">
+    <div class="status">
+      <div class="status-icon">🎸</div>
+      <div class="status-text" id="lobby-greeting">You're in!</div>
+      <div class="status-sub">Waiting for the host to start…</div>
+    </div>
+  </div>
+
+  <div id="question-screen" class="screen">
+    <div class="q-counter" id="q-counter"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+  </div>
+
+  <div id="waiting-screen" class="screen">
+    <div class="status">
+      <div class="status-icon">⏳</div>
+      <div class="status-text">Answer locked in!</div>
+      <div class="status-sub">Waiting for the reveal…</div>
+    </div>
+  </div>
+
+  <div id="reveal-screen" class="screen">
+    <div class="result-banner" id="result-banner"></div>
+    <div class="options" id="reveal-options"></div>
+    <div class="score-wrap">
+      <div class="score-label">Your score</div>
+      <div class="score-val" id="score-val">0</div>
+    </div>
+  </div>
+
+  <div id="gameover-screen" class="screen">
+    <div class="status">
+      <div class="status-icon">🏆</div>
+      <div class="status-text">Game Over!</div>
+    </div>
+    <div id="final-lb" style="width:100%"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const LABELS = ['A', 'B', 'C', 'D'];
+    let currentQuestion = null;
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    document.getElementById('join-btn').addEventListener('click', join);
+    document.getElementById('name-input').addEventListener('keypress', e => { if (e.key === 'Enter') join(); });
+
+    function join() {
+      const name = document.getElementById('name-input').value.trim();
+      if (!name) return;
+      document.getElementById('join-btn').disabled = true;
+      document.getElementById('error-msg').textContent = '';
+      socket.emit('register', { role: 'player', name });
+    }
+
+    socket.on('registered', () => {
+      const name = document.getElementById('name-input').value.trim();
+      document.getElementById('lobby-greeting').textContent = `Hi, ${name}! 👋`;
+      showScreen('lobby-screen');
+    });
+
+    socket.on('error', (msg) => {
+      document.getElementById('error-msg').textContent = msg;
+      document.getElementById('join-btn').disabled = false;
+    });
+
+    socket.on('game-started', () => {
+      showScreen('lobby-screen');
+    });
+
+    socket.on('question', (data) => {
+      currentQuestion = data;
+      document.getElementById('q-counter').textContent = `Question ${data.index + 1} of ${data.total}`;
+      document.getElementById('q-text').textContent = data.question;
+
+      const container = document.getElementById('options');
+      container.innerHTML = '';
+      data.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = `opt-btn ${LABELS[i]}`;
+        btn.innerHTML = `<span class="lbl">${LABELS[i]}</span>${opt}`;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#options .opt-btn').forEach(b => b.disabled = true);
+          btn.classList.add('selected');
+          socket.emit('submit-answer', { answerIndex: i });
+          showScreen('waiting-screen');
+        });
+        container.appendChild(btn);
+      });
+
+      showScreen('question-screen');
+    });
+
+    socket.on('reveal', (data) => {
+      document.getElementById('score-val').textContent = data.score ?? 0;
+
+      const banner = document.getElementById('result-banner');
+      if (data.yourAnswer === null || data.yourAnswer === undefined) {
+        banner.className = 'result-banner skipped';
+        banner.textContent = 'No answer submitted';
+      } else if (data.correct) {
+        banner.className = 'result-banner correct';
+        banner.textContent = '✓ Correct!';
+      } else {
+        banner.className = 'result-banner wrong';
+        banner.textContent = '✗ Wrong';
+      }
+
+      const container = document.getElementById('reveal-options');
+      container.innerHTML = '';
+      if (currentQuestion) {
+        currentQuestion.options.forEach((opt, i) => {
+          const btn = document.createElement('button');
+          btn.className = `opt-btn ${LABELS[i]}`;
+          btn.innerHTML = `<span class="lbl">${LABELS[i]}</span>${opt}`;
+          btn.disabled = true;
+          if (i === data.correctIndex) btn.classList.add('correct');
+          else if (i === data.yourAnswer) btn.classList.add('wrong');
+          container.appendChild(btn);
+        });
+      }
+
+      showScreen('reveal-screen');
+    });
+
+    socket.on('game-over', (data) => {
+      const container = document.getElementById('final-lb');
+      container.innerHTML = data.leaderboard.map((p, i) => `
+        <div class="lb-row">
+          <span>${['🥇','🥈','🥉'][i] ?? `${i+1}.`} ${p.name}</span>
+          <span class="pts">${p.score} pts</span>
+        </div>
+      `).join('');
+      showScreen('gameover-screen');
+    });
+  </script>
+</body>
+</html>
