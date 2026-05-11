@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -22,10 +23,13 @@ app.get('/display', (req, res) => res.sendFile(path.join(__dirname, 'public/disp
 const players = new Map();
 // socketId -> answerIndex
 const answers = new Map();
+// sessionToken -> { name, score, hidden, joinNumber }  (disconnected players)
+const sessions = new Map();
 
 let phase = 'lobby'; // lobby | question | reveal | gameover
 let questionIndex = -1;
 let joinCounter = 0;
+let lastReveal = null; // { correctIndex, tally } — used to sync reconnecting players
 
 // forHost=true: includes socketId + hidden flag; never send to players/display
 function playerList(forHost = false) {
@@ -46,6 +50,30 @@ function answerCount() {
   return { answered: answers.size, total: players.size };
 }
 
+// Sends the current game state to a newly registered/reconnected player socket
+function syncPlayerToPhase(socket) {
+  if (phase === 'question') {
+    const q = questions[questionIndex];
+    socket.emit('question', {
+      index: questionIndex,
+      total: questions.length,
+      question: q.question,
+      options: q.options,
+      audioUrl: q.audioUrl || null,
+      videoUrl: q.videoUrl || null,
+    });
+  } else if (phase === 'reveal' && lastReveal) {
+    const player = players.get(socket.id);
+    socket.emit('reveal', {
+      ...lastReveal,
+      leaderboard: playerList(false),
+      yourAnswer: null,
+      correct: null,
+      score: player ? player.score : 0,
+    });
+  }
+}
+
 function triggerReveal() {
   if (phase !== 'question') return;
   phase = 'reveal';
@@ -60,6 +88,7 @@ function triggerReveal() {
 
   const tally = Array(q.options.length).fill(0);
   for (const answerIndex of answers.values()) tally[answerIndex]++;
+  lastReveal = { correctIndex: q.correctIndex, tally };
 
   emitPlayersUpdate();
   io.to('host').emit('reveal', { correctIndex: q.correctIndex, leaderboard: playerList(true), tally });
@@ -70,6 +99,7 @@ function triggerReveal() {
     io.to(socketId).emit('reveal', {
       correctIndex: q.correctIndex,
       leaderboard: playerList(false),
+      tally,
       yourAnswer: answerIndex ?? null,
       correct: answerIndex !== undefined ? answerIndex === q.correctIndex : null,
       score: player.score,
@@ -78,11 +108,30 @@ function triggerReveal() {
 }
 
 io.on('connection', (socket) => {
-  socket.on('register', ({ role, name }) => {
+  socket.on('register', ({ role, name, sessionToken }) => {
     socket.data.role = role;
     socket.join(role);
 
     if (role === 'player') {
+      // Restore disconnected session
+      if (sessionToken && sessions.has(sessionToken)) {
+        const saved = sessions.get(sessionToken);
+        sessions.delete(sessionToken);
+        socket.data.sessionToken = sessionToken;
+        players.set(socket.id, { ...saved, answered: false });
+        socket.emit('registered', { sessionToken, reconnected: true, name: saved.name });
+        syncPlayerToPhase(socket);
+        emitPlayersUpdate();
+        return;
+      }
+
+      // Token sent but session not found (server restarted, game reset, etc.)
+      if (sessionToken) {
+        socket.emit('session-expired');
+        return;
+      }
+
+      // Fresh registration
       const trimmed = (name || '').trim();
       if (!trimmed) { socket.emit('error', 'Name cannot be empty'); return; }
       if ([...players.values()].some(p => p.name === trimmed)) {
@@ -90,22 +139,11 @@ io.on('connection', (socket) => {
         return;
       }
 
+      const token = crypto.randomUUID();
+      socket.data.sessionToken = token;
       players.set(socket.id, { name: trimmed, score: 0, answered: false, hidden: false, joinNumber: ++joinCounter });
-      socket.emit('registered');
-
-      // Sync late-joining player to current question
-      if (phase === 'question') {
-        const q = questions[questionIndex];
-        socket.emit('question', {
-          index: questionIndex,
-          total: questions.length,
-          question: q.question,
-          options: q.options,
-          audioUrl: q.audioUrl || null,
-          videoUrl: q.videoUrl || null,
-        });
-      }
-
+      socket.emit('registered', { sessionToken: token, reconnected: false });
+      syncPlayerToPhase(socket);
       emitPlayersUpdate();
     } else {
       socket.emit('registered');
@@ -131,11 +169,13 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Reset scores, keep registered players, return to lobby
+  // Reset scores, clear sessions, return to lobby
   socket.on('start-game', () => {
     if (socket.data.role !== 'host') return;
     for (const player of players.values()) { player.score = 0; player.answered = false; }
     answers.clear();
+    sessions.clear();
+    lastReveal = null;
     questionIndex = -1;
     phase = 'lobby';
     io.emit('game-started');
@@ -156,6 +196,7 @@ io.on('connection', (socket) => {
     }
 
     phase = 'question';
+    lastReveal = null;
     answers.clear();
     for (const player of players.values()) player.answered = false;
 
@@ -209,6 +250,16 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     if (socket.data.role === 'player') {
+      const player = players.get(socket.id);
+      // Save session so the player can reconnect without re-entering their name
+      if (player && socket.data.sessionToken) {
+        sessions.set(socket.data.sessionToken, {
+          name: player.name,
+          score: player.score,
+          hidden: player.hidden,
+          joinNumber: player.joinNumber,
+        });
+      }
       players.delete(socket.id);
       answers.delete(socket.id);
       emitPlayersUpdate();
