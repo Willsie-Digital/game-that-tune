@@ -267,7 +267,12 @@
     socket.emit('register', { role: 'display' });
 
     socket.on('players-update', (players) => {
-      document.getElementById('chips').innerHTML = players.map(p => `<div class="chip">🎵 ${p.name}</div>`).join('');
+      const chips = document.getElementById('chips');
+      if (players.length > 6) {
+        chips.innerHTML = `<div class="chip" style="font-size:clamp(1.2rem,2.5vw,2rem);padding:14px 32px;">🎵 ${players.length} players joined</div>`;
+      } else {
+        chips.innerHTML = players.map(p => `<div class="chip">🎵 ${p.name}</div>`).join('');
+      }
     });
 
     socket.on('game-started', () => {
