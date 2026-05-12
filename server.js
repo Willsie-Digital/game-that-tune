@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3737;
 const questions = JSON.parse(fs.readFileSync(path.join(__dirname, 'questions.json'), 'utf8'));
 
 app.use('/audio', express.static(path.join(__dirname, 'public/audio')));
+app.use('/display-media', express.static(path.join(__dirname, 'public/display')));
 
 app.get('/', (req, res) => res.redirect('/display'));
 app.get('/player', (req, res) => res.sendFile(path.join(__dirname, 'public/player/index.html')));

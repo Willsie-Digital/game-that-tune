@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game That Tune</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -18,13 +19,48 @@
       align-items: center;
       justify-content: center;
     }
+    #border-frame {
+      position: fixed;
+      inset: 15px;
+      border: 3px solid #e91e8c;
+      border-radius: 4px;
+      z-index: 100;
+      pointer-events: none;
+    }
 
-    .screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 1100px; padding: 32px; }
-    .screen.active { display: flex; }
+    #bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    #bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      padding: 48px;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    .screen.active { opacity: 1; pointer-events: auto; }
 
     /* ── Lobby ── */
-    .lobby-title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; margin-bottom: 8px; }
-    .lobby-sub   { color: #888; font-size: clamp(1rem, 2.5vw, 1.4rem); margin-bottom: 36px; }
+    .lobby-title { font-size: clamp(2.5rem, 6vw, 6.5rem); font-weight: 900; margin-bottom: 8px; }
+    .lobby-sub   { color: #888; font-size: clamp(1rem, 2.5vw, 2rem); margin-bottom: 36px; }
     .join-card {
       background: #181818;
       border-radius: 16px;
@@ -32,30 +68,30 @@
       text-align: center;
       margin-bottom: 28px;
     }
-    .join-label { color: #888; font-size: 0.95rem; margin-bottom: 6px; }
-    .join-url   { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 800; color: #e91e8c; }
+    .join-label { color: #888; font-size: clamp(0.95rem, 1.5vw, 1.4rem); margin-bottom: 6px; }
+    .join-url   { font-size: clamp(1.5rem, 4vw, 3.5rem); font-weight: 800; color: #e91e8c; }
     .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .chip {
       background: #181818;
       border-radius: 20px;
       padding: 8px 18px;
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-size: clamp(0.85rem, 1.8vw, 1.4rem);
     }
 
     /* ── Question ── */
-    .q-header { color: #888; font-size: 0.9rem; margin-bottom: 14px; letter-spacing: 0.04em; }
+    .q-header { color: #888; font-size: clamp(0.9rem, 1.4vw, 1.3rem); margin-bottom: 14px; letter-spacing: 0.04em; }
     .q-text {
-      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-size: clamp(1.4rem, 3.5vw, 3.2rem);
       font-weight: 700;
       text-align: center;
       line-height: 1.3;
       margin-bottom: 28px;
-      max-width: 900px;
+      max-width: 1500px;
     }
-    .media-wrap { width: 100%; max-width: 700px; margin-bottom: 24px; text-align: center; }
+    .media-wrap { width: 100%; max-width: 960px; margin-bottom: 24px; text-align: center; }
     .media-wrap video { width: 100%; border-radius: 12px; }
     .now-playing {
-      font-size: 3.5rem;
+      font-size: 6rem;
       animation: pulse 1.4s ease-in-out infinite;
       display: inline-block;
     }
@@ -67,41 +103,41 @@
     .opts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 20px;
       width: 100%;
-      max-width: 860px;
+      max-width: 1660px;
     }
     .opt {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: clamp(14px, 2.5vw, 22px) clamp(16px, 2.5vw, 24px);
+      padding: clamp(14px, 2.5vw, 36px) clamp(16px, 2.5vw, 40px);
       border-radius: 14px;
-      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-size: clamp(1rem, 2vw, 2rem);
       font-weight: 600;
       line-height: 1.3;
       transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s;
     }
-    .opt .lbl { font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 900; flex-shrink: 0; width: 1.8em; }
-    .opt .count { margin-left: auto; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 3px 12px; font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 700; flex-shrink: 0; }
+    .opt .lbl { font-size: clamp(1.2rem, 2.5vw, 2.8rem); font-weight: 900; flex-shrink: 0; width: 1.8em; }
+    .opt .count { margin-left: auto; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 3px 12px; font-size: clamp(0.85rem, 1.6vw, 1.5rem); font-weight: 700; flex-shrink: 0; }
     .opt.A { background: #2471a3; }
     .opt.B { background: #c0392b; }
     .opt.C { background: #d35400; }
     .opt.D { background: #27ae60; }
     .opt.correct { box-shadow: 0 0 0 4px #ffffff, 0 0 40px #ffffff55; transform: scale(1.03); }
-    .opt.wrong   { opacity: 0.2; }
+    .opt.wrong   { opacity: 0.38; }
 
     /* ── Reveal / Game Over ── */
-    .lb-wrap { width: 100%; max-width: 620px; margin-top: 28px; }
-    .lb-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; text-align: center; color: #888; }
+    .lb-wrap { width: 100%; max-width: 1100px; margin-top: 28px; }
+    .lb-title { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 700; margin-bottom: 14px; text-align: center; color: #888; }
     .lb-row {
       display: flex;
       align-items: center;
-      padding: 14px 20px;
+      padding: 18px 28px;
       background: #181818;
       border-radius: 10px;
-      margin-bottom: 8px;
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      margin-bottom: 10px;
+      font-size: clamp(0.95rem, 2vw, 1.6rem);
       gap: 12px;
     }
     .lb-row:first-child { background: #6a0040; }
@@ -109,23 +145,63 @@
     .lb-name { flex: 1; }
     .lb-pts  { font-weight: 700; color: #e91e8c; }
 
-    .gameover-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 6px; }
-    .gameover-sub   { color: #888; font-size: 1.1rem; margin-bottom: 28px; }
+    .gameover-title { font-size: clamp(2rem, 5vw, 5.5rem); font-weight: 900; margin-bottom: 6px; }
+    .gameover-sub   { color: #888; font-size: clamp(1.1rem, 2vw, 1.6rem); margin-bottom: 28px; }
+
+    .lobby-logo   { max-width: 520px; width: 75%; margin-bottom: 8px; }
+    .corner-logo  { position: absolute; top: 24px; left: 24px; height: 64px; width: auto; }
+    .gameover-logo { max-width: 420px; width: 55%; margin-bottom: 24px; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(28px); }
+      to   { transform: translateY(0); }
+    }
+    #question-screen.animate .q-header {
+      animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    #question-screen.animate .q-text {
+      animation: fadeSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+    }
+    #question-screen.animate .media-wrap {
+      animation: fadeSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+    }
+    #question-screen.animate .opts-grid .opt:nth-child(1) { animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.26s both; }
+    #question-screen.animate .opts-grid .opt:nth-child(2) { animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.36s both; }
+    #question-screen.animate .opts-grid .opt:nth-child(3) { animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.46s both; }
+    #question-screen.animate .opts-grid .opt:nth-child(4) { animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.56s both; }
+
+    @keyframes correctPop {
+      0%   { transform: scale(1.03); }
+      50%  { transform: scale(1.07); box-shadow: 0 0 0 5px #ffffff, 0 0 60px #ffffff88; }
+      100% { transform: scale(1.03); box-shadow: 0 0 0 4px #ffffff, 0 0 40px #ffffff55; }
+    }
+    .opt.correct { animation: correctPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both; }
   </style>
 </head>
 <body>
+  <div id="border-frame"></div>
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="/display-media/background.mov" type="video/mp4">
+    <source src="/display-media/background.mov" type="video/quicktime">
+  </video>
+  <div id="bg-overlay"></div>
 
   <div id="lobby-screen" class="screen active">
-    <div class="lobby-title">🎵 Game That Tune</div>
-    <div class="lobby-sub">A music trivia game</div>
+    <img src="/display-media/gttlogo.png" class="lobby-logo" alt="Game That Tune">
     <div class="join-card">
-      <div class="join-label">Join the game on your phone</div>
-      <div class="join-url" id="join-url">—</div>
+      <div class="join-label">Scan to join</div>
+      <div id="qrcode" style="display:inline-block; background:#181818; padding:12px; border-radius:8px; margin-bottom:14px;"></div>
+      <div class="join-url" id="join-url"></div>
     </div>
     <div class="chips" id="chips"></div>
   </div>
 
   <div id="question-screen" class="screen">
+    <img src="/display-media/gttlogo.png" class="corner-logo" alt="">
     <div class="q-header" id="q-header"></div>
     <div class="q-text" id="q-text"></div>
     <div class="media-wrap" id="media-wrap"></div>
@@ -133,6 +209,7 @@
   </div>
 
   <div id="reveal-screen" class="screen">
+    <img src="/display-media/gttlogo.png" class="corner-logo" alt="">
     <div class="q-text" id="reveal-q-text" style="font-size:clamp(1.1rem,2.5vw,1.7rem);margin-bottom:20px;"></div>
     <div class="opts-grid" id="reveal-opts" style="margin-bottom:0;"></div>
     <div class="lb-wrap">
@@ -142,7 +219,7 @@
   </div>
 
   <div id="gameover-screen" class="screen">
-    <div class="gameover-title">🏆 Final Scores</div>
+    <img src="/display-media/gttlogo.png" class="gameover-logo" alt="Game That Tune">
     <div class="gameover-sub">Thanks for playing!</div>
     <div class="lb-wrap">
       <div id="final-lb-list"></div>
@@ -160,7 +237,16 @@
       if (currentAudio) { currentAudio.pause(); currentAudio = null; }
     }
 
+    const joinUrl = window.location.origin + '/player';
     document.getElementById('join-url').textContent = window.location.host + '/player';
+    new QRCode(document.getElementById('qrcode'), {
+      text: joinUrl,
+      width: 280,
+      height: 280,
+      colorDark: '#ffffff',
+      colorLight: '#181818',
+      correctLevel: QRCode.CorrectLevel.H
+    });
 
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -215,6 +301,10 @@
       `).join('');
 
       showScreen('question-screen');
+      const qScreen = document.getElementById('question-screen');
+      qScreen.classList.remove('animate');
+      void qScreen.offsetWidth; // force reflow so animation restarts
+      qScreen.classList.add('animate');
     });
 
     socket.on('audio-control', ({ action }) => {
