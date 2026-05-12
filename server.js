@@ -126,8 +126,25 @@ io.on('connection', (socket) => {
         return;
       }
 
-      // Token sent but session not found (server restarted, game reset, etc.)
+      // Token not in sessions — check if the old socket is still alive (server hasn't detected disconnect yet)
       if (sessionToken) {
+        for (const [sid, s] of io.sockets.sockets) {
+          if (sid !== socket.id && s.data.sessionToken === sessionToken) {
+            const player = players.get(sid);
+            if (player) {
+              players.delete(sid);
+              answers.delete(sid);
+              s.disconnect(true);
+              socket.data.sessionToken = sessionToken;
+              players.set(socket.id, { ...player });
+              socket.emit('registered', { sessionToken, reconnected: true, name: player.name });
+              syncPlayerToPhase(socket);
+              emitPlayersUpdate();
+              return;
+            }
+            break;
+          }
+        }
         socket.emit('session-expired');
         return;
       }
